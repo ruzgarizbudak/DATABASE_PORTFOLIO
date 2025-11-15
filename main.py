@@ -131,8 +131,17 @@ WHERE user_id = ? AND project_id = ? """
         sql = """DELETE FROM skills WHERE skill_id = ? AND project_id = ? """
         self.__executemany(sql, [(skill_id, project_id)])
 
+    def add_column(self,table_name,column_name):
+        conn = sqlite3.connect(self.database)
+        cursor = conn.cursor()
+        new_column = column_name
+        alter_query = f"ALTER TABLE {table_name} ADD COLUMN {new_column} TEXT"
+        cursor.execute(alter_query)
+        conn.commit()
+
 
 if __name__ == '__main__':
     manager = DB_Manager('x.db')
     #manager.insert_project([("3" , "Doğayı Koruma" , "Hedefimiz doğayı korumaktır."  , "youtube.com" , 2)])
-    print(manager.get_project_info(3 , "Doğayı Koruma"))
+    #print(manager.get_project_info(3 , "Doğayı Koruma"))
+    manager.add_column("projects","deadline")
